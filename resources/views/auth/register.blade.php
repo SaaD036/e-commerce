@@ -61,7 +61,7 @@
     @section('content')
     <div class="container main-container">
         <div class="card-body form-div">
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('signup') }}">
                 {{ csrf_field() }}
                 <!-- email input -->
                 <div class="form-element">

@@ -18,7 +18,9 @@ class Carts extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('product_id');
+            $table->unsignedInteger('confirm_order_id')->nullable();
             $table->integer('amount')->default(1);
+            $table->boolean('is_ordered')->default(false);
 
             $table->timestamps();
         });

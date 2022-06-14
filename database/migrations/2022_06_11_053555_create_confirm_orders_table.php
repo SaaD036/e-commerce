@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Order extends Migration
+class CreateConfirmOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class Order extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('order', function (Blueprint $table) {
+        Schema::create('confirm_orders', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('product_id');
             $table->integer('amount')->default(1);
             $table->string('address');
             $table->string('message')->nullable();
@@ -38,7 +36,6 @@ class Order extends Migration
      */
     public function down()
     {
-        //
-        Schema::dropIfExists('order');
+        Schema::dropIfExists('confirm_orders');
     }
 }

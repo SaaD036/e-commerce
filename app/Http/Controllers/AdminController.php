@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+use App\Models\Category;
+use App\Models\ConfirmOrder;
+use App\Models\Product;
+use App\Models\Carts;
+
 
 class AdminController extends Controller
 {
@@ -22,9 +27,12 @@ class AdminController extends Controller
     public function index(){
         return view('Admin.home');
     }
+
     public function createProduct(){
-        return view('Admin.insertProduct');
+        $categories = Category::get();
+        return view('Admin.insertProduct', compact('categories'));
     }
+
     public function storeProduct(Request $request){
         $product = new Product;
 
@@ -32,7 +40,6 @@ class AdminController extends Controller
             'title' => 'required|max:250',
             'description' => 'required',
             'price' => 'required',
-            'brand_id' => 'required',
             'category_id' => 'required'
         ]);
 
@@ -41,28 +48,22 @@ class AdminController extends Controller
         $product->price = $request->price;
         $product->offer_price = $request->offer;
         $product->quantity = $request->amount;
-        $product->brand_id = $request->brand_id;
+        $product->brand_id = 1;
         $product->category_id = $request->category_id;
         $product->status = $request->status;
         $product->admin_id = Auth::user()->id;
         $product->slug = '';
 
-        // $existing_product = Product::select()
-        //                     ->where('title', '=', $product->title)
-        //                     ->get();
-
-        // if(!$existing_product->isEmpty()){
-        //     return $existing_product;
-        // }
-
         $product->save();
         return redirect()->route('store-product');
     }
+
     public function editProduct(){
         $products = Product::select()->get();
 
         return view('Admin.editProduct', compact('products'));
     }
+
     public function editOneProduct(Request $request, $id){
         $products = Product::select()
                     ->where('id', '=', $id)
@@ -72,6 +73,7 @@ class AdminController extends Controller
         return view('Admin.editOneProduct', compact('product'));;
         // return $product;
     }
+    
     public function updateOneProduct(Request $request, $id){
         if($request->title){
             Product::where('id', '=', $id)
@@ -133,5 +135,29 @@ class AdminController extends Controller
         echo $proData;
 
         //return $products;
+    }
+
+    public function showOrder(){
+        $completed_orders = ConfirmOrder::where('is_completed', true)
+                        ->orWhere('is_shipped', true)
+                        ->with('user')
+                        ->get();
+        $current_order = ConfirmOrder::where('is_completed', false)
+                        ->where('is_shipped', false)
+                        ->where('is_paid', true)
+                        ->with('user')
+                        ->get();
+        $incompleted_order = ConfirmOrder::where('is_completed', false)
+                        ->where('is_shipped', false)
+                        ->where('is_paid', false)
+                        ->with('user')
+                        ->get();
+        
+        $completed_orders = ConfirmOrder::addCartToOrderObject($completed_orders);
+        $current_order = ConfirmOrder::addCartToOrderObject($current_order);
+        $incompleted_order = ConfirmOrder::addCartToOrderObject($incompleted_order);
+        
+        // return $completed_orders;
+        return view('Admin.order.order', compact('completed_orders', 'incompleted_order', 'current_order'));
     }
 }

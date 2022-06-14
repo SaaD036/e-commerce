@@ -48,27 +48,16 @@ class LoginController extends Controller
         $this->validateLogin($request);
         $user = User::where('email', $request->email)->first();
 
-        if(empty($user)){
-
-        }
-        else{
+        if(!empty($user)){
             if(Auth::guard('web')->attempt(['email'=>$request->email, 'password'=>$request->password], $request->remember)){
-                //if user is verified
-                if($user->status == 1){
-                    session()->flash('success', 'Login successfully');
-                    return $this->sendLoginResponse($request);
-                }
-                //if user isn't verified
-                else{
-                    $user->notify(new VerifyRegistration($user, $user->remember_token));
-                    session()->flash('success', 'Confirmation mail has been sent to you');
-                    return redirect('/');
-                }
+                session()->flash('success', 'Confirmation mail has been sent to you');
             }
             else{
-                return redirect()->route('home');
+                return redirect()->route('login');
             }
         }
+
+        return redirect()->route('home');
     }
 
     public function validateLogin(){

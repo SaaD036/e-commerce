@@ -15,7 +15,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="/" style="color:green; font-family:Lucida Handwriting; font-size:50px"><b>SaaD's</b></a>
+        <a class="navbar-brand" href="/" style="color:green; font-family:Lucida Handwriting; font-size:50px"><b>E-commerce</b></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
@@ -37,23 +37,8 @@
                 <li class="nav-item" style="width: 25%; display:flex; align-items:center">
                     <a class="nav-link" href="{{ route('products') }}">Offer</a>
                 </li>
-
-                <!-- <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Link
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Link</a>
-                </li> -->
             </ul>
-            <ul class="navbar-nav ml-auto center">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                 <form class="d-flex nav-item center">
                     <div class="input-group mb-3 center">
                         <input type="text" class="form-control" placeholder="Search products">
@@ -67,8 +52,7 @@
                     </div>
                 </form>
             </ul>
-            <ul class="navbar-nav ml-auto">
-                <!-- Authentication Links -->
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                 @guest
                     @if (Route::has('login'))
                         <li class="nav-item">
@@ -89,7 +73,7 @@
                         <!-- <a class="nav-link" href="">{{ Auth::user()->email }}</a> -->
                     </li>
                     <li class="nav-item" style="margin-left:15px">
-                        <a href="/cart">
+                        <a href="{{ route('show.carts') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="green" class="bi bi-cart-dash-fill" viewBox="0 0 16 16">
                                 <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM6.5 7h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1z"/>
                             </svg>

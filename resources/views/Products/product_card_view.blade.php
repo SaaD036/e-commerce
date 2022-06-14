@@ -42,7 +42,9 @@
         <div style="width:100%; display:flex; justify-content:center; padding:10px">
             <form action="/cart/{{ $product->id }}" method="post">
             {{ csrf_field() }}
-                <button class="btn btn-primary" style="background-color:green; border:none">Add to cart</button>
+                <button class="btn btn-primary" style="background-color:green; border:none">
+                    <a href ="{{ route('show.carts') }}/{{$product->id}}" style="text-decoration: none; color: white">Add to cart</a>
+                </button>
             </form>
         </div>
     </div>

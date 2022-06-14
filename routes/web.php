@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Request;
-use App\Models\District;
-use App\Http\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +14,6 @@ use App\Http\Controllers;
 |
 */
 
-Route::get('/products', 'App\Http\Controllers\ProductController@getAllProduct')->name('products');
 
 //AdminRoutes
 Route::group(['prefix' => 'admin'], function(){
@@ -35,19 +31,41 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/category/delete/{id}', 'App\Http\Controllers\CategoryController@delete');
     Route::get('/category-create', 'App\Http\Controllers\CategoryController@create_category')->name('category-create');
     Route::post('/category-create', 'App\Http\Controllers\CategoryController@store');
+
+    Route::get('/order', 'App\Http\Controllers\AdminController@showOrder')->name('order');
 });
 
-Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//Auth routes
+Auth::routes();
+Route::post('/signup', [App\Http\Controllers\HomeController::class, 'signup'])->name('signup');
+Route::get('/token/{token_number}', 'App\Http\Controllers\User\UserController@verifyUser')->name('user.verification');
+
+
+
+//home routes
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/products', 'App\Http\Controllers\ProductController@getAllProduct')->name('products');
+
+Route::get('/cart', 'App\Http\Controllers\OrderController@showCart')->middleware('auth')->name('show.carts');
+Route::get('/cart/{product_id}', 'App\Http\Controllers\OrderController@addProductToCart')->middleware('auth');
+Route::get('/confirm-order', 'App\Http\Controllers\OrderController@confirmAllOrder')->middleware('auth')->name('confirm-order');
+Route::get('/cart/add-one/{id}', 'App\Http\Controllers\OrderController@addOneToCart')->middleware('auth')->name('cart-add-one');
+Route::get('/cart/remove-one/{id}', 'App\Http\Controllers\OrderController@removeOneFromCart')->middleware('auth')->name('cart-remove-one');
+
+Route::get('/order', 'App\Http\Controllers\OrderController@showOrder')->middleware('auth')->name('show-order');
+Route::get('/order/delete/{id}', 'App\Http\Controllers\OrderController@deleteOrder')->middleware('auth');
+Route::get('/order/{id}', 'App\Http\Controllers\OrderController@showSingleOrder')->middleware('auth');
+
+Route::post('/payment/{id}', 'App\Http\Controllers\OrderController@makePayment')->middleware('auth');
+
+
 
 //user
-Route::get('/token/{token_number}', 'App\Http\Controllers\User\UserController@verifyUser')->name('user.verification');
 Route::group(['prefix' => 'user'], function(){
     Route::get('/{id}', 'App\Http\Controllers\User\UserController@show');
     Route::post('/{id}', 'App\Http\Controllers\User\UserController@update');
 });
-
-// orders
-Route::get('/cart', 'App\Http\Controllers\OrderController@addProductToCart')->middleware('auth')->name('show.carts');
-Route::post('/cart/{id}', 'App\Http\Controllers\OrderController@addProductToCart')->middleware('auth');

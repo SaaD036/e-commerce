@@ -46,6 +46,10 @@
         margin-left: 5px;
     }
 
+    .links:hover {
+        color: #fff;
+    }
+
 </style>
 
 <div class="sidebar">
@@ -69,31 +73,24 @@
             <a href="{{route('admin-home')}}" class="links">Home</a>
         </div>
         <!-- for order element -->
+        
         <div class="sidebar-element center" style="color: #fff; cursor:pointer" onclick="orderDivClose()">
             <svg style="margin-right:5px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#fff" class="bi bi-wallet2" viewBox="0 0 16 16">
                 <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
             </svg>
-            Order
+            <a href="{{ route('order') }}" class="links">Order</a>
         </div>
-        <div id="orderDiv" style="width:100%; margin-left:20px; display:none">
-            <div class="sidebar-sub-element center">
-                Current Order
-            </div>
-            <div class="sidebar-sub-element center">
-                Cancelled order
-            </div>
-            <div class="sidebar-sub-element center">
-                Previous order
-            </div>
-        </div>
+
         <!-- for sale element -->
         <div class="sidebar-element center">
             Sale
         </div>
+
         <!-- for product element -->
         <div class="sidebar-element center" style="color: #fff; cursor:pointer" onclick="orderProductClose()">
             Product
         </div>
+        
         <div id="productDiv" style="width:100%; margin-left:20px; display:none">
             <div class="sidebar-sub-element center">
                 <a href="{{ route('create-product') }}" class="links">Create Product</a>
@@ -106,9 +103,11 @@
             </div>
         </div>
         <!-- for category element -->
+        
         <div class="sidebar-element center" style="color: #fff; cursor:pointer" onclick="categoryDivClose()">
             Category
         </div>
+        
         <div id="categoryDiv" style="width:100%; margin-left:20px; display:none">
             <div class="sidebar-sub-element center">
                 <a href="{{ route('category-create') }}" class="links">Create Category</a>
@@ -121,20 +120,10 @@
 
 </div>
 <script>
-    let orderDiv_flag=false;
     let orderProduct_flag=false;
     let categoryDiv_flag=false;
 
-    function orderDivClose(){
-        if(orderDiv_flag){
-            document.getElementById("orderDiv").style.display = "none";
-            orderDiv_flag=false;
-        }
-        else{
-            document.getElementById("orderDiv").style.display = "block";
-            orderDiv_flag=true;
-        }
-    }
+
     function orderProductClose(){
         if(orderProduct_flag){
             document.getElementById("productDiv").style.display = "none";

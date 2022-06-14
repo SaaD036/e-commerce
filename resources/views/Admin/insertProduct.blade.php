@@ -75,15 +75,14 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Brand ID</label>
+                    <label class="col-sm-2 col-form-label">Category</label>
                     <div class="col-sm-10">
-                        <input name="brand_id" type="number" class="form-control input-field" placeholder="Brand ID">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Category ID</label>
-                    <div class="col-sm-10">
-                        <input name="category_id" type="number" class="form-control input-field" placeholder="Category ID">
+                        <select class="form-input form-select input-field" aria-label="Default select example" name="category_id">
+                            <option value="">Select a category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="form-group row">

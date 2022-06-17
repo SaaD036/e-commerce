@@ -58,7 +58,12 @@
                     <td>{{$category->description}}</td>
                     <td style="display: flex;">
                         <div class="button"><a href="{{route('category')}}/{{$category->id}}">Edit</a></div>
-                        <div class="button-delete"><a href="{{route('category')}}/delete/{{$category->id}}">Delete</a></div>
+
+                        @if(count($category->products) <= 0)
+                            <div class="button-delete"><a href="{{route('category')}}/delete/{{$category->id}}">Delete</a></div>
+                        @else
+                            <div class="button-delete"><a href="{{route('category')}}/delete/{{$category->id}}" style="pointer-events: none">Delete</a></div>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

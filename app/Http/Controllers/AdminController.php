@@ -9,7 +9,8 @@ use App\Models\Category;
 use App\Models\ConfirmOrder;
 use App\Models\Product;
 use App\Models\Carts;
-
+use App\Models\Payment;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -25,7 +26,20 @@ class AdminController extends Controller
 
     //
     public function index(){
-        return view('Admin.home');
+        $sale = ConfirmOrder::where('is_completed', true)->sum('amount');
+        $soldProductUnit = ConfirmOrder::join('carts', 'confirm_orders.id', 'carts.confirm_order_id')
+                            ->where('is_completed', true)
+                            ->sum('carts.amount');
+        $countCustomerWhoOrdered = ConfirmOrder::select('id', 'user_id')->groupBy('user_id')
+                                    ->where('is_completed', true)
+                                    ->count();
+        $users = User::with('completedOrder')->get();
+
+        foreach($users as $user){
+            $user->total_payment = ConfirmOrder::countTotalPayment($user->completedOrder);
+        }
+
+        return view('Admin.home', compact('sale', 'soldProductUnit', 'countCustomerWhoOrdered', 'users',));
     }
 
     public function createProduct(){
@@ -50,7 +64,7 @@ class AdminController extends Controller
         $product->quantity = $request->amount;
         $product->brand_id = 1;
         $product->category_id = $request->category_id;
-        $product->status = $request->status;
+        $product->status = 1;
         $product->admin_id = Auth::user()->id;
         $product->slug = '';
 
@@ -140,24 +154,54 @@ class AdminController extends Controller
     public function showOrder(){
         $completed_orders = ConfirmOrder::where('is_completed', true)
                         ->orWhere('is_shipped', true)
-                        ->with('user')
+                        ->with('user', 'carts', 'carts.product', 'payment')
                         ->get();
         $current_order = ConfirmOrder::where('is_completed', false)
                         ->where('is_shipped', false)
                         ->where('is_paid', true)
-                        ->with('user')
+                        ->with('user',  'carts', 'carts.product', 'payment')
                         ->get();
         $incompleted_order = ConfirmOrder::where('is_completed', false)
                         ->where('is_shipped', false)
                         ->where('is_paid', false)
-                        ->with('user')
+                        ->with('user',  'carts', 'carts.product', 'payment')
                         ->get();
         
-        $completed_orders = ConfirmOrder::addCartToOrderObject($completed_orders);
-        $current_order = ConfirmOrder::addCartToOrderObject($current_order);
-        $incompleted_order = ConfirmOrder::addCartToOrderObject($incompleted_order);
-        
-        // return $completed_orders;
         return view('Admin.order.order', compact('completed_orders', 'incompleted_order', 'current_order'));
+    }
+
+    public function confirmPayment($id){
+        ConfirmOrder::where('id', $id)
+            ->where('is_paid', true)
+            ->update([
+                'is_completed' => true,
+                'is_shipped' => false,
+            ]);
+        
+        return back();
+    }
+
+    public function deletePayment($id){
+        ConfirmOrder::where('id', $id)
+            ->update([
+                'is_completed' => false,
+                'is_paid' => false,
+                'is_shipped' => false,
+            ]);
+
+        Payment::where('confirm_order_id', $id)->delete();
+        
+        return back();
+    }
+
+    public function makeShipment($id){
+        ConfirmOrder::where('id', $id)
+            ->where('is_paid', true)
+            ->where('is_completed', true)
+            ->update([
+                'is_shipped' => true,
+            ]);
+        
+        return back();
     }
 }

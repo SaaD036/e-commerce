@@ -98,9 +98,6 @@
             <div class="sidebar-sub-element center">
                 <a href="{{ route('edit-product') }}" class="links">Edit Product</a>
             </div>
-            <div class="sidebar-sub-element center">
-                <a href="" class="links">Edit Product</a>
-            </div>
         </div>
         <!-- for category element -->
         
@@ -113,7 +110,7 @@
                 <a href="{{ route('category-create') }}" class="links">Create Category</a>
             </div>
             <div class="sidebar-sub-element center">
-                <a href="{{ route('category') }}" class="links">Edit</a>
+                <a href="{{ route('category') }}" class="links">Edit Category</a>
             </div>
         </div>
     </div>

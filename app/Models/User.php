@@ -49,4 +49,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function completedOrder(){
+        return $this->hasMany(ConfirmOrder::class)->where('is_completed', true);
+    }
 }

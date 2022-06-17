@@ -33,6 +33,9 @@ Route::group(['prefix' => 'admin'], function(){
     Route::post('/category-create', 'App\Http\Controllers\CategoryController@store');
 
     Route::get('/order', 'App\Http\Controllers\AdminController@showOrder')->name('order');
+    Route::get('/confirm-payment/{id}', 'App\Http\Controllers\AdminController@confirmPayment');
+    Route::get('/delete-payment/{id}', 'App\Http\Controllers\AdminController@deletePayment');
+    Route::get('/make-shipment/{id}', 'App\Http\Controllers\AdminController@makeShipment');
 });
 
 

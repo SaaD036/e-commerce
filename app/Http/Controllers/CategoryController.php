@@ -20,10 +20,13 @@ class CategoryController extends Controller
 
     //
     public function index(){
-        $categories = Category::select()->get();
+        $categories = Category::with('products')
+                        ->select()
+                        ->get();
 
         return view('Admin.Category.category', compact('categories'));
     }
+
     public function edit(Request $request, $id){
         $category = Category::select()
                         ->where('id', '=', $id)
@@ -34,6 +37,7 @@ class CategoryController extends Controller
         return $category;
         return view('Admin.Category.editCategory', compact('category'));
     }
+    
     public function update(Request $request, $id){
         if($request->name){
             Category::where('id', '=', $id)
@@ -50,15 +54,18 @@ class CategoryController extends Controller
 
         return redirect()->route('category');
     }
+    
     public function delete($id){
         Category::where('id', '=', $id)
                 ->delete();
 
         return redirect()->route('category');
     }
+    
     public function create_category(){
         return view('Admin.Category.createCatagory');
     }
+    
     public function store(Request $request){
         $request->validate([
             'name' => 'required|max:250',
@@ -89,5 +96,4 @@ class CategoryController extends Controller
 
         return redirect()->route('category');
     }
-
 }

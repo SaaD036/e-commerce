@@ -53,6 +53,6 @@ class HomeController extends Controller
             'remember_token' => $string
         ]);
 
-        return redirect()->route('/');
+        return redirect()->route('home');
     }
 }

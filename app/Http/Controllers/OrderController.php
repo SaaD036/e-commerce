@@ -137,6 +137,14 @@ class OrderController extends Controller
 
     public function makePayment(Request $request, $id){
         $payment = Payment::where('confirm_order_id', $id)->first();
+        $carts = Carts::with('product', 'product.category')->where('confirm_order_id', $id)->get();
+        $total_price = 0;
+
+        foreach($carts as $cart){
+            if($cart->product && $cart->product->price){
+                $total_price = $total_price + ($cart->product->price - $cart->product->offer_price) * $cart->amount;
+            }
+        }
 
         if($payment){
             $payment->transaction_id = $request->transaction_id;
@@ -157,6 +165,7 @@ class OrderController extends Controller
                             'is_shipped' => false,
                             'is_completed' => false,
                             'is_seen' => false,
+                            'amount' => $total_price,
                         ]);
 
         return redirect('order/'.$id);
